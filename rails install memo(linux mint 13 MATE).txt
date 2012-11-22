@@ -1,0 +1,90 @@
+﻿Linux Mint 13 MATEのインストール完了直後の状態から
+railsが利用できる状態にするまでにやること。
+
+
+■最新のパッケージリストを取得する
+
+$ sudo apt-get update
+
+
+■curlをインストールする
+
+$ sudo apt-get install curl
+
+
+■curlを使ってrvmをインストールする
+
+$ \curl -L https://get.rvm.io | bash -s stable
+
+
+■rvm利用のため.bashrcを修正する
+
+.bashrcの一番下に下記追加（rvmのscript読込み用の設定）
+追加後は一度ターミナルを閉じる。
+
+$ echo '[[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm"' >> ~/.bashrc 
+
+
+■rvmコマンドでrubyインストールに必要なパッケージを確認する
+
+$ rvm requirements
+
+
+■linux Mint 13ではここまでの手順で
+　bash, curl, git, patchはすでにインストールされている状態なので
+　何もしなくてもよい。
+　Additional DependenciesのFor Rubyに
+　記載してあるパッケージリストには
+　未インストールのものがあるため、
+　リストを全部コピー＆ペーストしてapt-getを使用してインストール。
+
+$ sudo apt-get install build-essential openssl libreadline6 libreadline6-dev curl git-core zlib1g zlib1g-dev libssl-dev libyaml-dev libsqlite3-dev sqlite3 libxml2-dev libxslt-dev autoconf libc6-dev ncurses-dev automake libtool bison subversion pkg-config
+
+
+■rvmを使ってrubyをインストールする
+　下記はruby 1.9.3を入れる場合の例
+
+$ rvm install 1.9.3
+
+
+
+■rvmを使ってruby 1.9.3を利用するように切替える
+
+$ rvm use 1.9.3
+
+1.9.3に切替わっているか確認する
+
+$ rvm list
+
+
+■ruby1.9.3の配下に
+  「rails3.2」という名のrails3.2用のgemsetを作る。
+
+$ rvm gemset create rails3.2
+
+
+■rails3.2のgemsetを利用するよう切替える
+
+$ rvm use 1.9.3@rails3.2
+
+rails3.2に切替わっているか確認する
+
+$ rvm gemset list
+
+
+■railsをインストール
+
+$ gem install rails
+
+
+■rails3.2のgemsetの利用をデフォルトにする
+
+$ rvm use 1.9.3@rails3.2 --default
+
+
+■railsを使うにはjavascriptランタイムが必要。
+　下記URLに書いてあるランタイムならどれでもよい。
+　今回はnodeをインストール。
+　https://github.com/sstephenson/execjs
+
+$ sudo apt-get install nodejs
